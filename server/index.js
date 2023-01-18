@@ -1,5 +1,4 @@
 import express from 'express';
-import userRouter from './src/routers/user.router.js';
 import { connectDB } from './src/database/db.connect.js';
 
 const app = express();
