@@ -1,4 +1,4 @@
-import { create } from "../services/user.service.js";
+import { create, find } from "../services/user.service.js";
 
 export const createUser = async function(body){
     const {name, username, email, 
@@ -24,4 +24,15 @@ export const createUser = async function(body){
         message: "Created.",
         id: user._id
     }; 
+};
+
+export const findUser = async function(id){
+    const user = find(id);
+
+    if(!user) return {
+        statusCode: 404,
+        message: "Not found."
+    };
+
+    return user;
 };
