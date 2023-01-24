@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, findUser } from '../controllers/users.controller.js';
+import { createUser, findUser, updateUserData } from '../controllers/users.controller.js';
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.get('/data/:id', async (req, res) => {
     };};
 });
 
-router.patch('/account/data/:id', async (req, res) => {
+router.put('/account/data/:id', async (req, res) => {
     try{
         return res.json(await updateUserData(
             req.params.id, req.body

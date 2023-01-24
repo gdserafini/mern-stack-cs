@@ -1,4 +1,4 @@
-import { create, find } from "../services/user.service.js";
+import { create, find, update } from "../services/user.service.js";
 
 export const createUser = async function(body){
 
@@ -37,18 +37,18 @@ export const findUser = async function(id){
     return user;
 };
 
-export const updateUserData = async function(id, body){
-    if(!id || !body) return {
+export const updateUserData = async function(userId, body){
+    if(!userId || !body) return {
         statusCode: 400,
         message: 'Missing data.'
     };
 
-    const user = await find(id);
+    const {id, email, username} = body;
 
-    if(!user) return {
-        statusCode: 404,
-        message: "Not found."
+    if(id || email || username) return {
+        statusCode: 405,
+        message: 'Cannot update this data.'
     };
 
-    return update(user);
+    return update(userId, body);
 };

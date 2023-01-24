@@ -80,11 +80,23 @@ export const find = async function(id){
     });
 };
 
-export const update = async function(user){
-    if(!user) return {
+export const update = async function(id, data){
+    if(!id || !data) return {
         statusCode: 400,
-        message: 'Missing data.'
+        message: 'Missing data'
     };
 
-    
+    const user = await find(id);
+
+    if(!user) return {
+        statusCode: 404,
+        message: "Not found."
+    };
+
+    return prisma.user.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: data
+    });
 };
