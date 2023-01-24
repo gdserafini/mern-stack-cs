@@ -21,13 +21,12 @@ export const createUser = async function(body){
 
     return {
         statusCode: 200, 
-        message: "Created.",
-        id: user._id
+        message: "Created."
     }; 
 };
 
 export const findUser = async function(id){
-    const user = find(id);
+    const user = await find(id);
 
     if(!user) return {
         statusCode: 404,

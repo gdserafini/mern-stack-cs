@@ -1,7 +1,6 @@
 import express from 'express';
-import { connectDB } from './src/database/db.connect.js';
-import userRouter from './src/routers/user.router.js'
-import { testGet } from './src/routers/user.router.js';
+import { BootstrapDB } from './src/database/prismaMysql.js';
+import usersRouter from './src/routers/user.router.js'
 
 const normalizePort = function(value){
     const port = parseInt(value);
@@ -16,9 +15,8 @@ const PORT = normalizePort(process.env.PORT || '3000');
 
 app.set('port', PORT);
 
-connectDB();
+//BootstrapDB();
 app.use(express.json());
 
 app.listen(PORT);
-//app.use('/user', userRouter);
-app.use('/user/info/:id', testGet);
+app.use('/users', usersRouter);
