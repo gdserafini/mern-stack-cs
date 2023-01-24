@@ -14,6 +14,7 @@ const USER_FIELDS = {
 };
 
 export const create = async function(body){
+
     if(!body) return {
         statusCode: 400,
         message: 'Missing data.'
@@ -21,6 +22,18 @@ export const create = async function(body){
 
     const {name, username, email, 
         password, avatar, background} = body;
+
+    const exists = prisma.user.findUnique({
+        where: {
+            username: username
+        },
+        select: USER_FIELDS
+    });
+
+    if(exists) return {
+        statusCode: 401,
+        message: 'Already exists.'
+    };
 
     if(!name || !username || !email || !password ||
         !avatar || !background) {
@@ -65,4 +78,13 @@ export const find = async function(id){
         },
         select: USER_FIELDS
     });
+};
+
+export const update = async function(user){
+    if(!user) return {
+        statusCode: 400,
+        message: 'Missing data.'
+    };
+
+    
 };

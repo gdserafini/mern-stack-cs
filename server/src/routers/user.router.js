@@ -15,7 +15,7 @@ router.post('/account', async (req, res) => {
     };};
 });
 
-router.get('/info/:id', async (req, res) => {
+router.get('/data/:id', async (req, res) => {
     try{
         return res.json(await findUser(
             req.params.id
@@ -25,6 +25,20 @@ router.get('/info/:id', async (req, res) => {
         statusCode: 500,
         message: 'Server error.'
     };};
+});
+
+router.patch('/account/data/:id', async (req, res) => {
+    try{
+        return res.json(await updateUserData(
+            req.params.id, req.body
+        ));
+    }
+    catch(error){
+        return {
+            statusCode: 500,
+            message: 'Server error.'
+        };
+    };
 });
 
 export default router;
