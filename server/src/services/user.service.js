@@ -14,6 +14,11 @@ const USER_FIELDS = {
 };
 
 export const create = async function(body){
+    if(!body) return {
+        statusCode: 400,
+        message: 'Missing data.'
+    };
+
     const {name, username, email, 
         password, avatar, background} = body;
 
@@ -49,6 +54,11 @@ export const create = async function(body){
 };
 
 export const find = async function(id){
+    if(!id || parseInt(id) <= 0) return {
+        statusCode: 400,
+        message: 'Missing/invalid data.'
+    };
+
     return prisma.user.findUnique({
         where: {
             id: parseInt(id)
