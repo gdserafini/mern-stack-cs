@@ -13,7 +13,7 @@ router.post('/account', validBody, async (req, res) => {
     }
     catch(error){ return {
         statusCode: 500,
-        message: 'Server error.'
+        message: error.message
     };};
 });
 
@@ -26,7 +26,7 @@ router.get('/data/:id', validId, async (req, res) => {
     }
     catch(error){ return {
         statusCode: 500,
-        message: 'Server error.'
+        message: error.message
     };};
 });
 
@@ -41,7 +41,7 @@ router.put('/account/data/:id', validId, validBody,
     catch(error){
         return {
             statusCode: 500,
-            message: 'Server error.'
+            message: error.message
         };
     };
 });
