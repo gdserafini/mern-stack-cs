@@ -11,10 +11,11 @@ router.post('/account', validBody, async (req, res) => {
             req.body
         ));
     }
-    catch(error){ return {
-        statusCode: 500,
-        message: error.message
-    };};
+    catch(error){ return res.json({
+            statusCode: 500,
+            message: error.message
+        });
+    };
 });
 
 router.get('/data/:id', validId, async (req, res) => {
@@ -24,10 +25,11 @@ router.get('/data/:id', validId, async (req, res) => {
             req.params.id
         ));
     }
-    catch(error){ return {
-        statusCode: 500,
-        message: error.message
-    };};
+    catch(error){ return res.json({
+            statusCode: 500,
+            message: error.message
+        });
+    };
 });
 
 router.put('/account/data/:id', validId, validBody,
@@ -39,10 +41,10 @@ router.put('/account/data/:id', validId, validBody,
         ));
     }
     catch(error){
-        return {
+        return res.json({
             statusCode: 500,
             message: error.message
-        };
+        });
     };
 });
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import { BootstrapDB } from './src/database/prismaMysql.js';
 import usersRouter from './src/routers/user.router.js';
+import authRouter from './src/routers/auth.router.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,3 +24,4 @@ app.use(express.json());
 
 app.listen(PORT);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
