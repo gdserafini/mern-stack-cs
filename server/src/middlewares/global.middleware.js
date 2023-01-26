@@ -22,7 +22,7 @@ export const validId = function(req, res, next){
 export const validBody = function(req, res, next){
     if(!req.body) return {
         statusCode: 400,
-        message: 'Missing body.'
+        message: 'Missing data.'
     };
 
     const params = Object.keys(req.body);
@@ -30,9 +30,7 @@ export const validBody = function(req, res, next){
     if(params.length === 0){
         return {
             statusCode: 400,
-            message: 'Body is empty.'
+            message: 'The body is empty.'
         };
-    };
-
-    next();
+    }
 };
