@@ -22,7 +22,7 @@ export const validId = function(req, res, next){
 export const validBody = function(req, res, next){
     if(!req.body) return {
         statusCode: 400,
-        message: 'Missing data.'
+        message: 'Missing body.'
     };
 
     const params = Object.keys(req.body);
