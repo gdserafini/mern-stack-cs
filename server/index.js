@@ -23,5 +23,5 @@ app.set('port', PORT);
 app.use(express.json());
 
 app.listen(PORT);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/auth', authRouter);
