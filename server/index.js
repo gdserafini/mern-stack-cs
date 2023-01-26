@@ -1,6 +1,9 @@
 import express from 'express';
 import { BootstrapDB } from './src/database/prismaMysql.js';
-import usersRouter from './src/routers/user.router.js'
+import usersRouter from './src/routers/user.router.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const normalizePort = function(value){
     const port = parseInt(value);
