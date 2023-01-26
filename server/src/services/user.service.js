@@ -60,17 +60,3 @@ export const update = async function(id, data){
         data: data
     });
 };
-
-export const findByUsername = async function(username){
-    if(!username || typeof username !== 'string') return {
-        statusCode: 400,
-        message: 'Missing/invalid data.'
-    };
-
-    return prisma.user.findUnique({
-        where: {
-            username: username
-        },
-        select: USER_FIELDS
-    });
-}
