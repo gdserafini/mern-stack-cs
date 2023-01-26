@@ -15,33 +15,8 @@ const USER_FIELDS = {
 
 export const create = async function(body){
 
-    if(!body) return {
-        statusCode: 400,
-        message: 'Missing data.'
-    };
-
     const {name, username, email, 
         password, avatar, background} = body;
-
-    const exists = prisma.user.findUnique({
-        where: {
-            username: username
-        },
-        select: USER_FIELDS
-    });
-
-    if(exists) return {
-        statusCode: 401,
-        message: 'Already exists.'
-    };
-
-    if(!name || !username || !email || !password ||
-        !avatar || !background) {
-            return {
-                statusCode: 400,
-                message: 'Missing data.'
-            }
-    };
 
     const cryptPassword = await bcrypt.hash(
         password, await bcrypt.genSalt()
@@ -67,10 +42,6 @@ export const create = async function(body){
 };
 
 export const find = async function(id){
-    if(!id || parseInt(id) <= 0) return {
-        statusCode: 400,
-        message: 'Missing/invalid data.'
-    };
 
     return prisma.user.findUnique({
         where: {
@@ -81,17 +52,6 @@ export const find = async function(id){
 };
 
 export const update = async function(id, data){
-    if(!id || !data) return {
-        statusCode: 400,
-        message: 'Missing data'
-    };
-
-    const user = await find(id);
-
-    if(!user) return {
-        statusCode: 404,
-        message: "Not found."
-    };
 
     return prisma.user.update({
         where: {
@@ -100,3 +60,17 @@ export const update = async function(id, data){
         data: data
     });
 };
+
+export const findByUsername = async function(username){
+    if(!username || typeof username !== 'string') return {
+        statusCode: 400,
+        message: 'Missing/invalid data.'
+    };
+
+    return prisma.user.findUnique({
+        where: {
+            username: username
+        },
+        select: USER_FIELDS
+    });
+}

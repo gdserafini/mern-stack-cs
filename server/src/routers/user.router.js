@@ -1,9 +1,11 @@
 import express from 'express';
 import { createUser, findUser, updateUserData } from '../controllers/users.controller.js';
+import { validId, validBody} from '../middlewares/global.middleware.js';
 
 const router = express.Router();
 
-router.post('/account', async (req, res) => {
+router.post('/account', validBody, async (req, res) => {
+
     try{
         return res.json(await createUser(
             req.body
@@ -15,7 +17,8 @@ router.post('/account', async (req, res) => {
     };};
 });
 
-router.get('/data/:id', async (req, res) => {
+router.get('/data/:id', validId, async (req, res) => {
+
     try{
         return res.json(await findUser(
             req.params.id
@@ -27,7 +30,9 @@ router.get('/data/:id', async (req, res) => {
     };};
 });
 
-router.put('/account/data/:id', async (req, res) => {
+router.put('/account/data/:id', validId, validBody,
+    async (req, res) => {
+
     try{
         return res.json(await updateUserData(
             req.params.id, req.body
