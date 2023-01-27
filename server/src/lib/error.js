@@ -33,5 +33,6 @@ export class ServerError extends Error {
 
     static throwIf(condition, message, builder=BadRequest){
         if(condition) throw builder(message);
+        return ServerError;
     };
 };
