@@ -34,5 +34,3 @@ app.use(cookieParser());
 app.listen(PORT);
 app.use('/user', usersRouter);
 app.use('/auth', authRouter);
-
-app.use(ServerError.HANDLERS);
