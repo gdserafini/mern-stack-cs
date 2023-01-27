@@ -3,6 +3,7 @@ import { BootstrapDB } from './src/database/prismaMysql.js';
 import usersRouter from './src/routers/user.router.js';
 import authRouter from './src/routers/auth.router.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 dotenv.config();
@@ -17,18 +18,6 @@ const normalizePort = function(value){
 
 const isDev = function(){
     return process.env.NODE_ENV === 'dev';
-};
-
-const isProd = function(){
-    return process.env.NODE_ENV === 'prod';
-};
-
-const isCi = function(){
-    return process.env.NODE_ENV === 'ci';
-};
-
-const isStaging = function(){
-    return !isProd();
 };
 
 const app = express();

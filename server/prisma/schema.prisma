@@ -18,10 +18,5 @@ model User {
   password    String
   avatar      String
   background  String
-  roles       Role[]
-}
-
-model Role {
-  name      String @id
-  user      User[]
+  type        String
 }

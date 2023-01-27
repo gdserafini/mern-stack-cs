@@ -9,9 +9,25 @@ const generateToken = function(user){
         message: 'Missing data.'
     };
 
+console.log(user);
+
+    const {id, username, type} = user;
+
+    if(!id || !username || !type) return {
+        statusCode: 500,
+        message: 'Missing data.'
+    };
+
+    const PAYLOAD = {
+        id,
+        username,
+        type
+    };
+
     return {
-        statusCode: 200,
-        message: 'working'
+        token: jsonwebtoken.sign(
+            PAYLOAD, process.env.SECRET, {expiresIn: 86400}
+        )
     };
 };
 
