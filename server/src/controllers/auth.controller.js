@@ -1,7 +1,7 @@
 import myLib from '../lib/myLib.js';
 import bcrypt from 'bcrypt';
 import { getUser } from '../services/auth.service.js';
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 const generateToken = function(user){
     if(!user) return {
@@ -9,9 +9,9 @@ const generateToken = function(user){
         message: 'Missing data.'
     };
 
-console.log(user);
-
     const {id, username, type} = user;
+
+    console.log(user);
 
     if(!id || !username || !type) return {
         statusCode: 500,
@@ -19,13 +19,14 @@ console.log(user);
     };
 
     const PAYLOAD = {
-        id,
-        username,
-        type
+        id: id,
+        username: username,
+        type: type
     };
 
     return {
-        token: jsonwebtoken.sign(
+        statusCode: 200,
+        token: jwt.sign(
             PAYLOAD, process.env.SECRET, {expiresIn: 86400}
         )
     };
@@ -42,7 +43,10 @@ export const login = async function(body){
     };
 
     if(!email){
-        if(!myLib.validPassword(password)){
+        const validPassword = await myLib
+            .validPassword(password)
+
+        if(!validPassword){
 
             return {
                 statusCode: 400,
@@ -70,8 +74,11 @@ export const login = async function(body){
         return generateToken(user);
     }
     else if(!username){
+        const validPassword = await myLib
+            .validPassword(password)
+
         if(!myLib.validEmail(email) || 
-            !myLib.validPassword(password)){
+            !validPassword){
 
                 return {
                     statusCode: 400,

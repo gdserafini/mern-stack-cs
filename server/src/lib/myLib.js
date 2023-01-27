@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
@@ -6,8 +8,13 @@ const validEmail = function(email){
         emailRegex.test(email));
 };
 
-const validPassword = function(password){
-    return (password === 'admin' || 
+const validPassword = async function(password){
+    const adminPassword = await bcrypt.hash(
+        process.env.DEFAULT_ADMIN_PASSWORD,
+        await bcrypt.genSalt()
+    );
+
+    return (bcrypt.compareSync(password, adminPassword) || 
         passwordRegex.test(password));
 };
 
