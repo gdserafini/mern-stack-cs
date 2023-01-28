@@ -25,6 +25,20 @@ export const invalidFields = function(fields=[]){
     );
 };
 
+export const missingFieldsCreate = function(body){
+    const {name, username, password, 
+        email, avatar, background} = body;
+
+    if(!name || !username || !password ||
+        !email || !avatar || !background){
+
+            return true;
+        }
+
+    return false;
+};
+
 export default {
-    validEmail, validPassword, invalidFields
+    validEmail, validPassword, invalidFields,
+    missingFieldsCreate
 };

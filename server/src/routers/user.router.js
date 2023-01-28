@@ -8,14 +8,14 @@ const router = express.Router();
 router.post('/account', validBody, async (req, res) => {
 
     try{
-        return res.json(await createUser(
-            req.body
-        ));
+        const response = await createUser(req.body);
+
+        return res.status(response['statusCode'])
+            .json(response);
     }
-    catch(error){ return res.json({
-            statusCode: 500,
-            message: error.message
-        });
+    catch(error){ 
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
     };
 });
 

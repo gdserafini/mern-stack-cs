@@ -13,38 +13,16 @@ const USER_FIELDS = {
 };
 
 export const create = async function(body){
-
-    const {name, username, email, 
-        password, avatar, background} = body;
-
-    const cryptPassword = await bcrypt.hash(
-        password, await bcrypt.genSalt()
-    );
-
     return prisma.user.create({
-        data: {
-            name: name,
-            username: username,
-            email: email,
-            password: cryptPassword,
-            avatar: avatar,
-            background: background,
-            roles: {
-                connect: [
-                    {
-                        name: 'USER'
-                    }
-                ]
-            }
-        }
+        data: body
     });
 };
 
-export const find = async function(id){
+export const find = async function(key, value){
 
     return prisma.user.findUnique({
         where: {
-            id: id
+            [key]: value
         },
         select: USER_FIELDS
     });
