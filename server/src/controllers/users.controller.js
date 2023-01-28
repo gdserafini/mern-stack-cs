@@ -5,14 +5,17 @@ import bcrypt from 'bcrypt';
 import logger from '../lib/log.js';
 
 export const createUser = async function(body){
-    logger.debug({bodyController: body});
+    logger.debug({bodyCreateController: body});
+
+    const validPasswordFMT = await myLib
+        .validPassword(body.password);
 
     ServerError
         .throwIf(myLib.missingFieldsCreate(body), 
             'Missing fields.', BadRequest)
         .throwIf(!myLib.validEmail(body.email), 
             'Invalid email format.', BadRequest)
-        .throwIf(!myLib.validPassword(body.password), 
+        .throwIf(!validPasswordFMT, 
             'Invalid password format.', BadRequest);
 
     body['password'] = await bcrypt.hash(
