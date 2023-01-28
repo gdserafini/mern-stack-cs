@@ -5,7 +5,7 @@ import authRouter from './src/routers/auth.router.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 //import logger from 'morgan';
-import { isDev } from './src/lib/env.js';
+//import { isDev } from './src/lib/env.js';
 import logger from './src/lib/log.js';
 
 dotenv.config();
