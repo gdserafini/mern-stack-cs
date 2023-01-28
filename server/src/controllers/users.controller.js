@@ -1,5 +1,6 @@
 import { create, find, update } from "../services/user.service.js";
 import myLib from '../lib/myLib.js';
+import { NotFound, ServerError } from "../lib/error.js";
 
 export const createUser = async function(body){
     const {name, username, email, password, 
@@ -24,7 +25,16 @@ export const createUser = async function(body){
 };
 
 export const findUser = async function(id){
-    return find(id);
+    const user = await find(id);
+
+    ServerError.throwIf(!user, 
+        'User not found.', NotFound
+    );
+
+    return {
+        statusCode: 200,
+        user: user
+    };
 };
 
 export const updateUserData = async function(userId, body){

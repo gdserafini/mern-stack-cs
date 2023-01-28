@@ -8,7 +8,6 @@ const USER_FIELDS = {
     username: true,
     password: false,
     email: true,
-    roles: true,
     avatar: true,
     background: true
 };
@@ -45,7 +44,7 @@ export const find = async function(id){
 
     return prisma.user.findUnique({
         where: {
-            id: parseInt(id)
+            id: id
         },
         select: USER_FIELDS
     });

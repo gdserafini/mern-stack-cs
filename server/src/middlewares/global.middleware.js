@@ -1,38 +1,39 @@
+import { BadRequest, ServerError, errorJson } from "../lib/error.js";
 
 export const validId = function(req, res, next){
-    const id = req.params.id;
+    try{
+        const id = parseInt(req.params.id);
 
-    if(!id) return res.json({
-        statusCode: 400,
-        message: 'Missing id.'
-    });
+        ServerError.throwIf(isNaN(id) || id <= 0 || !id, 
+            'Invalid user id.', BadRequest
+        );
 
-    if(isNaN(parseInt(id)) ||
-        parseInt(id) <= 0) {
+        req.params.id = id;
 
-            return res.json({
-                statusCode: 400,
-                message: 'Invalid id.'
-            });
+        next();
+    }
+    catch(error){
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
     };
-
-    next();
 };
 
 export const validBody = function(req, res, next){
-    if(!req.body) return res.json({
-        statusCode: 400,
-        message: 'Missing data.'
-    });
+    try {
+        ServerError.throwIf(!req.body,
+            'Missing body', BadRequest
+        );
 
-    const params = Object.keys(req.body);
+        const params = Object.keys(req.body);
 
-    if(params.length === 0){
-        return res.json({
-            statusCode: 400,
-            message: 'The body is empty.'
-        });
+        ServerError.throwIf(params.length === 0,
+            'Empty body', BadRequest    
+        );
+
+        next();
+    } 
+    catch(error) {
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
     };
-
-    next();
 };

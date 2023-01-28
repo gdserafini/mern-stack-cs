@@ -36,3 +36,10 @@ export class ServerError extends Error {
         return ServerError;
     };
 };
+
+export const errorJson = function(error){
+    return {
+        statusCode: error['statusCode'],
+        message: error['message']
+    };
+};
