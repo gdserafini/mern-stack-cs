@@ -18,6 +18,13 @@ const validPassword = async function(password){
         passwordRegex.test(password));
 };
 
+export const invalidFields = function(fields=[]){
+    return fields.some(
+        (f) => f !== 'password' || f !== 'name' || 
+            f!== 'avatar' || f !== 'background'
+    );
+};
+
 export default {
-    validEmail, validPassword
+    validEmail, validPassword, invalidFields
 };

@@ -34,19 +34,20 @@ router.get('/data/:id', validId, async (req, res) => {
     };
 });
 
-router.put('/account/data/:id', validId, validBody,
-    async (req, res) => {
+router.put('/account/data/:id', validId, 
+    validBody, async (req, res) => {
 
     try{
-        return res.json(await updateUserData(
+        const response = await updateUserData(
             req.params.id, req.body
-        ));
+        );
+
+        return res.status(response['statusCode'])
+            .json(response);
     }
     catch(error){
-        return res.json({
-            statusCode: 500,
-            message: error.message
-        });
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
     };
 });
 

@@ -54,7 +54,7 @@ export const update = async function(id, data){
 
     return prisma.user.update({
         where: {
-            id: parseInt(id)
+            id: id
         },
         data: data
     });

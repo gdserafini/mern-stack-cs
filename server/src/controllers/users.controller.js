@@ -1,6 +1,6 @@
 import { create, find, update } from "../services/user.service.js";
 import myLib from '../lib/myLib.js';
-import { NotFound, ServerError } from "../lib/error.js";
+import { BadRequest, NotFound, ServerError } from "../lib/error.js";
 
 export const createUser = async function(body){
     const {name, username, email, password, 
@@ -38,5 +38,18 @@ export const findUser = async function(id){
 };
 
 export const updateUserData = async function(userId, body){
-    return update(userId, body);
+    const user = await find(userId);
+
+    ServerError
+        .throwIf(!user, 'Not found.', NotFound)
+        .throwIf(myLib.invalidFields(Object.keys(body)),
+            'Invalid fields passed.', BadRequest    
+    );
+
+    const updateUser = await update(userId, body);
+
+    return {
+        statusCode: 200,
+        updateUser: `${updateUser['username']} updated.`
+    };
 };
