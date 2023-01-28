@@ -1,4 +1,5 @@
 import { BadRequest, ServerError, errorJson } from "../lib/error.js";
+import logger from '../lib/log.js';
 
 export const validId = function(req, res, next){
     try{
@@ -8,11 +9,14 @@ export const validId = function(req, res, next){
             'Invalid user id.', BadRequest
         );
 
+        logger.debug({validId: id});
+
         req.params.id = id;
 
         next();
     }
     catch(error){
+        logger.error(error);
         return res.status(error['statusCode'])
             .json(errorJson(error));
     };
@@ -24,15 +28,20 @@ export const validBody = function(req, res, next){
             'Missing body', BadRequest
         );
 
+        logger.debug({validBody: req.body});
+
         const params = Object.keys(req.body);
 
         ServerError.throwIf(params.length === 0,
             'Empty body', BadRequest    
         );
 
+        logger.debug({validBodyParams: params});
+
         next();
     } 
     catch(error) {
+        logger.error(error);
         return res.status(error['statusCode'])
             .json(errorJson(error));
     };

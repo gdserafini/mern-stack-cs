@@ -1,6 +1,6 @@
 
 import { prisma } from "../database/prismaMysql.js";
-import bcrypt from 'bcrypt';
+import logger from '../lib/log.js';
 
 const USER_FIELDS = {
     id: true,
@@ -13,12 +13,15 @@ const USER_FIELDS = {
 };
 
 export const create = async function(body){
+    logger.debug({serviceCreateBody: body});
+
     return prisma.user.create({
         data: body
     });
 };
 
 export const find = async function(key, value){
+    logger.debug({toFindService: {key, value}});
 
     return prisma.user.findUnique({
         where: {
@@ -29,6 +32,7 @@ export const find = async function(key, value){
 };
 
 export const update = async function(id, data){
+    logger.debug({updateService: {id, data}});
 
     return prisma.user.update({
         where: {
