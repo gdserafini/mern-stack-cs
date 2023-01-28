@@ -20,8 +20,8 @@ const validPassword = async function(password){
 
 export const invalidFields = function(fields=[]){
     return fields.some(
-        (f) => f !== 'password' || f !== 'name' || 
-            f!== 'avatar' || f !== 'background'
+        (f) => f !== 'password' && f !== 'name' && 
+            f!== 'avatar' && f !== 'background'
     );
 };
 
