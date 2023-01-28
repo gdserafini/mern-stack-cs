@@ -1,14 +1,15 @@
 import {PrismaClient} from '@prisma/client';
+import logger from '../lib/log.js';
+import { BadRequest, ServerError } from '../lib/error.js';
 
 const prisma = new PrismaClient();
 
 export const getUser = async function(field, value){
-    if(!field || !value){
-        return {
-            statusCode: 400,
-            message: 'Missing data.'
-        }
-    }
+    logger.debug({authToGetService: {field, value}});
+
+    ServerError
+        .throwIf(!field, 'Missing field.', BadRequest)
+        .throwIf(!value, 'Missing value.', BadRequest);
 
     return prisma.user.findUnique({
         where: {

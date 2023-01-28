@@ -2,20 +2,17 @@ import myLib from '../lib/myLib.js';
 import bcrypt from 'bcrypt';
 import { getUser } from '../services/auth.service.js';
 import jwt from 'jsonwebtoken';
-import { BadRequest, ServerError } from '../lib/error.js';
+import { BadRequest, NotFound, ServerError, Unauthorized } from '../lib/error.js';
+import logger from '../lib/log.js';
 
 const generateToken = function(user){
-    if(!user) return {
-        statusCode: 400,
-        message: 'Missing data.'
-    };
+    logger.debug({toTokenUser: user});
+
+    ServerError.throwIf(!user,
+        'Missing user.', BadRequest);
 
     const {id, type} = user;
-
-    // if(!id || !username || !type) return {
-    //     statusCode: 500,
-    //     message: 'Missing data.'
-    // };
+    logger.debug({toTokenFields: {id, type}});
 
     ServerError
         .throwIf(!id && !type, 
@@ -37,75 +34,71 @@ const generateToken = function(user){
 };
 
 export const login = async function(body){
+    logger.debug({bodyLoginController: body});
+
     const {username, email, password} = body;
 
-    if(!username && !email || !password){
-        return {
-            statusCode: 400,
-            message: 'Missing data.'
-        };
-    };
+    logger.debug({fieldsLoginController: {
+        username, email, password
+    }});
+
+    ServerError.throwIf(!username && !email || !password, 
+        'Missing data to login.', BadRequest    
+    );
 
     if(!email){
         const validPassword = await myLib
-            .validPassword(password)
+            .validPassword(password);
+        logger.debug({validPasswordController: validPassword});
 
-        if(!validPassword){
-
-            return {
-                statusCode: 400,
-                message: 'Invalid data format.'
-            };
-
-        };
+        ServerError
+            .throwIf(!validPassword, 
+                'Invalid password format', BadRequest);
 
         const user = await getUser('username', username);
+        logger.debug({userLoginUsernameController: user});
 
-        if(!user) return {
-            statusCode: 405,
-            message: 'Not found.'
-        };
+        ServerError
+            .throwIf(!user, 'User not found', NotFound);
 
-        const correctPassword = bcrypt.compare(
-            password, user['password']
-        );
+        const correctPassword = await bcrypt.compare(
+            password, user['password']);
+        logger.debug({correctPasswordUController: correctPassword});
 
-        if(!correctPassword) return {
-            statusCode: 404,
-            message: 'Invalid data.'
-        };
+        ServerError.
+            throwIf(!correctPassword, 'Incorrect data',
+                Unauthorized);
 
         return generateToken(user);
     }
     else if(!username){
         const validPassword = await myLib
-            .validPassword(password)
+            .validPassword(password);
+        const validEmail = myLib.validEmail(email);
 
-        if(!myLib.validEmail(email) || 
-            !validPassword){
+        logger.debug({validPasswordController: validPassword});
+        logger.debug({validEmailController: validEmail});
 
-                return {
-                    statusCode: 400,
-                    message: 'Invalid data format.'
-                };
-
-            };
+        ServerError
+            .throwIf(!validPassword, 
+                'Invalid password format', BadRequest)
+            .throwIf(!validEmail, 
+                'Invalid email format', BadRequest);
 
         const user = await getUser('email', email);
+        logger.debug({userLoginEmailController: user});
 
-        if(!user) return {
-            statusCode: 405,
-            message: 'Not found.'
-        };
+        ServerError
+            .throwIf(!user, 'User not found', NotFound);
 
         const correctPassword = await bcrypt.compare(
             password, user['password']
         );
+        logger.debug({correctPasswordEController: correctPassword});
 
-        if(!correctPassword) return {
-            statusCode: 404,
-            message: 'Invalid data.'
-        };
+        ServerError.
+            throwIf(!correctPassword, 'Incorrect data',
+                Unauthorized);
 
         return generateToken(user);
     };
