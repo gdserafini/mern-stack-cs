@@ -12,11 +12,42 @@ datasource db {
 
 model User {
   id          Int @id @default(autoincrement())
-  name        String
+  name        String 
   username    String @unique
   email       String @unique
   password    String
-  avatar      String
-  background  String
+  avatar      String?
+  background  String?
   type        String
+  news        New[]
+  likes       Likes[]
+  comments    Comment[]
+}
+
+model Comment {
+  id            Int @id @default(autoincrement())
+  text          String
+  newId         Int 
+  new           New @relation(fields: [newId], references: [id])
+  userId        Int
+  user          User @relation(fields: [userId], references: [id])
+}
+
+model Likes {
+  id          Int @id @default(autoincrement())
+  newId       Int 
+  new         New @relation(fields: [newId], references: [id])
+  userId      Int
+  user        User @relation(fields: [userId], references: [id])
+}
+
+model New {
+  id         Int @id @default(autoincrement())
+  title      String @unique
+  text       String @db.LongText
+  created    DateTime @default(now())
+  comments   Comment[]
+  likes      Likes[]
+  userId     Int
+  author     User @relation(fields: [userId], references: [id])
 }
