@@ -9,7 +9,10 @@ const USER_FIELDS = {
     password: false,
     email: true,
     avatar: true,
-    background: true
+    background: true,
+    news: true,
+    likes: true,
+    comments: true
 };
 
 export const create = async function(body){

@@ -27,13 +27,10 @@ export const invalidFields = function(fields=[]){
 
 export const missingFieldsCreate = function(body){
     const {name, username, password, 
-        email, avatar, background} = body;
+        email} = body;
 
     if(!name || !username || !password ||
-        !email || !avatar || !background){
-
-            return true;
-        }
+        !email) return true;
 
     return false;
 };
