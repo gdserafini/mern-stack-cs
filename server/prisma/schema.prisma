@@ -50,4 +50,5 @@ model New {
   likes      Likes[]
   userId     Int
   author     User @relation(fields: [userId], references: [id])
+  banner     String
 }
