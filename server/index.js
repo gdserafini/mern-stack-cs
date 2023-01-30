@@ -2,6 +2,7 @@ import express from 'express';
 import { BootstrapDB } from './src/database/prismaMysql.js';
 import usersRouter from './src/routers/user.router.js';
 import authRouter from './src/routers/auth.router.js';
+import newsRouter from './src/routers/news.router.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 //import logger from 'morgan';
@@ -37,4 +38,4 @@ app.listen(PORT, () => {
 });
 app.use('/user', usersRouter);
 app.use('/auth', authRouter);
-//app.use('/news', JWT_SECURITY, newsRouter);
+app.use('/news', newsRouter);

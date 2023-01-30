@@ -46,3 +46,9 @@ export const validBody = function(req, res, next){
             .json(errorJson(error));
     };
 };
+
+export const JWT_SECURITY = async function(req, res, next){
+    //get id from jwt token
+    req.body.userId = 13;
+    next();
+};
