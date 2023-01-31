@@ -1,4 +1,5 @@
-import { BadRequest, ServerError, errorJson } from "../lib/error.js";
+import { BadRequest, ServerError, errorJson, 
+    Unauthorized } from "../lib/error.js";
 import logger from '../lib/log.js';
 
 export const validId = function(req, res, next){
@@ -48,9 +49,45 @@ export const validBody = function(req, res, next){
 };
 
 export const JWT_SECURITY = async function(req, res, next){
-    //get id from jwt token
-    req.body.userId = 13;
-    next();
+
+    try{
+        const {authorization} = req.headers;
+        logger.debug({authorizationJwt: authorization});
+
+        ServerError.throwIf(!authorization, 
+            'Unauthorized', Unauthorized);
+
+        const [bearer, token] = authorization.split(" ");
+        logger.debug({partsJwt: {bearer, token}});
+
+        ServerError
+            .throwIf(!bearer || !token, 'Missing data.', Unauthorized)
+            .throwIf(bearer !== 'Bearer', 'Invalid schema', BadRequest);
+
+        jwt.verify(token, process.env.SECRET, 
+            async (error, decoded) => {
+                logger.debug({intoJwtVerify: {error, decoded}});
+
+                ServerError.throwIf(error, 
+                    'Internal server error', ServerError);
+                
+                if(decoded['type'] === 'ADMIN') {
+                    req['userType'] = decoded['type'];
+                };
+
+                req['userId'] = decoded['id'];
+                logger.debug({reqJwt: {
+                    userType: req['userType'], userId: req['userId']
+                }});
+
+                return next();
+        });
+    }
+    catch(error){
+        logger.error(error);
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
+    }
 };
 
 const urlRegex = /(^((\w+-)+\w+$){1})|(^(\w+$){1})/;
