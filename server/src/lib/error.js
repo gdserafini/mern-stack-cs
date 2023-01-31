@@ -13,7 +13,11 @@ export const Forbidden = function(message='Forbidden'){
 
 export const NotFound = function(message='Not found.'){
     return new ServerError(404, message);
-}
+};
+
+export const InternalError = function(message='Internal server error.'){
+    return new ServerError(500, message);
+};
 
 export class ServerError extends Error {
     statusCode;

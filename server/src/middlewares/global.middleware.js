@@ -52,3 +52,21 @@ export const JWT_SECURITY = async function(req, res, next){
     req.body.userId = 13;
     next();
 };
+
+const urlRegex = /(^((\w+-)+\w+$){1})|(^(\w+$){1})/;
+
+const validTitleFormat = function(title){
+    return urlRegex.test(title);
+};
+
+export const validTitle = function(req, res, next){
+    const {title} = req.params.title;
+    logger.debug({titleReqMiddleware: title});
+
+    ServerError
+        .throwIf(!title, 'Missing title.', BadRequest)
+        .throwIf(!validTitleFormat(title), 
+            'Invalid title format.', BadRequest);
+
+    next();    
+};
