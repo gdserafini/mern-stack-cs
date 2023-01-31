@@ -1,6 +1,7 @@
 import { BadRequest, ServerError, errorJson, 
     Unauthorized } from "../lib/error.js";
 import logger from '../lib/log.js';
+import jwt from 'jsonwebtoken';
 
 export const validId = function(req, res, next){
     try{
@@ -61,7 +62,7 @@ export const JWT_SECURITY = async function(req, res, next){
         logger.debug({partsJwt: {bearer, token}});
 
         ServerError
-            .throwIf(!bearer || !token, 'Missing data.', Unauthorized)
+            .throwIf((!bearer || !token), 'Missing data.', Unauthorized)
             .throwIf(bearer !== 'Bearer', 'Invalid schema', BadRequest);
 
         jwt.verify(token, process.env.SECRET, 
@@ -71,11 +72,9 @@ export const JWT_SECURITY = async function(req, res, next){
                 ServerError.throwIf(error, 
                     'Internal server error', ServerError);
                 
-                if(decoded['type'] === 'ADMIN') {
-                    req['userType'] = decoded['type'];
-                };
-
+                req['userType'] = decoded['type'];
                 req['userId'] = decoded['id'];
+
                 logger.debug({reqJwt: {
                     userType: req['userType'], userId: req['userId']
                 }});
@@ -89,6 +88,21 @@ export const JWT_SECURITY = async function(req, res, next){
             .json(errorJson(error));
     }
 };
+
+export const isAdmin = function(req, res, next){
+    try{
+        ServerError.throwIf(req['userType'] !== 'ADMIN',
+            'Unauthorized - not a admin.', Unauthorized);
+
+        next();
+    }
+    catch(error){
+        logger.error(error);
+
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
+    };
+}
 
 const urlRegex = /(^((\w+-)+\w+$){1})|(^(\w+$){1})/;
 
