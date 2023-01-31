@@ -80,7 +80,8 @@ export const getLastNewsDb = async function(){
         orderBy: {
             created: 'desc'
         },
-        take: 1
+        take: 1,
+        select: NEWS_FIELDS
     });
 
 };

@@ -61,7 +61,10 @@ export const findAllNews = async function(limit, offset, order, url){
             created: n['created'],
             comments: n['comments'],
             likes: n['likes'],
-            author: n['author']['username'],
+            author: {
+                username: n['author']['username'],
+                avatar: n['author']['avatar']
+            },
             banner: n['banner']
         }))
     };
@@ -81,7 +84,8 @@ export const updateNews = async function(title, body){
 };
 
 export const getLastNews = async function(){
-    const lastNews = await getLastNewsDb();
+    const last = await getLastNewsDb();
+    const lastNews = last[0];
     logger.debug({lastNewsController: lastNews});
 
     ServerError.throwIf(!lastNews, 
@@ -89,6 +93,17 @@ export const getLastNews = async function(){
 
     return {
         statusCode: 200,
-        lastNews
+        last:{
+            title: lastNews['title'],
+            text: lastNews['text'],
+            created: lastNews['created'],
+            comments: lastNews['comments'],
+            likes: lastNews['likes'],
+            author: {
+                username: lastNews['author']['username'],
+                avatar: lastNews['author']['avatar']
+            },
+            banner: lastNews['banner']
+        }
     };
 };
