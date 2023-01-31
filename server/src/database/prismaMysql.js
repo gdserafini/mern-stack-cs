@@ -1,5 +1,7 @@
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
+import {find} from '../services/user.service.js';
+import logger from '../lib/log.js';
 
 export const prisma = new PrismaClient();
 
@@ -9,6 +11,14 @@ const makeAdmin = async function(){
         process.env.DEFAULT_ADMIN_PASSWORD,
         await bcrypt.genSalt()
     );
+
+    const admin = await prisma.user.findUnique({
+        where: {
+            username: 'admin'
+        }
+    });
+
+    if(admin) return ;
 
     await prisma.user.create({
             data: {
@@ -24,7 +34,7 @@ const makeAdmin = async function(){
 };
 
 export const BootstrapDB = async function(){
-    console.log('Checking initial data...');
+    logger.info('Checking initial data...');
     await makeAdmin();
-    console.log('Done');
+    logger.info('Done.');
 };
