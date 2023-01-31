@@ -3,5 +3,6 @@ import {isDev} from './env.js';
 
 export default pino ({
     enabled: true,
-    level: isDev() ? 'debug' : 'info'
+    level: process.env.NODE_ENV === 'dev' 
+        ? 'debug' : 'info'
 });
