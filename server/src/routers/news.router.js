@@ -41,9 +41,20 @@ router.get('/data/:title', validTitle, async (req, res) => {
     }
 });
 
-router.get('/data/all', async (req, res) => {
+router.get('/all', async (req, res) => {
     try{
-        const response = await findAllNews();
+        let {limit, offset, order} = req.query;
+        logger.debug({reqGetAllQuery: {limit, offset}});
+
+        limit = parseInt(limit);
+        offset = parseInt(offset);
+
+        if(!limit) limit = 10;
+        if(!offset) offset = 0;
+        if(!order) order = 'asc'
+
+        const response = await findAllNews(
+            limit, offset, order);
         logger.info({response: response});
 
         return res.status(response['statusCode'])

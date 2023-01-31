@@ -1,4 +1,5 @@
 import { createNewsDb, getAllNews, getNews, 
+    getNewsLength, 
     getUserById, updateNewsDb } from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, ServerError, 
@@ -32,8 +33,39 @@ export const createNews = async function(body){
     };
 };
 
-export const findAllNews = async function(){
-    return getAllNews();
+export const findAllNews = async function(limit, offset, order, url){
+    logger.debug({queryAllController: {limit, offset, order}});
+
+    const total = await getNewsLength();
+    logger.debug({countControllerAll: total});
+
+    const next = limit + offset;
+    const nextUrl = next < total ? 
+        `/news/data/all?limit=${limit}&offset=${next}` : null;
+    const previous = offset - limit < 0 ?
+        null : offset - limit;
+    const previousUrl = previous ? 
+        `/news/data/all?limit=${limit}&offset=${previous}` : null;
+
+    logger.debug({dataPagination: {
+        next, nextUrl, previous, previousUrl
+    }});
+
+    const news = await getAllNews(limit, offset, order);
+
+    return {
+        statusCode: 200,
+        next, nextUrl, limit, offset, total,
+        results: news.map(n => ({
+            title: n['title'],
+            text: n['text'],
+            created: n['created'],
+            comments: n['comments'],
+            likes: n['likes'],
+            author: n['author']['username'],
+            banner: n['banner']
+        }))
+    };
 };
 
 export const findNews = async function(key, value){
