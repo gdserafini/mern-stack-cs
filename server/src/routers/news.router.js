@@ -4,7 +4,8 @@ import { JWT_SECURITY, validBody, validTitle }
 import { createNews } from '../controllers/news.controller.js';
 import logger from '../lib/log.js';
 import { errorJson } from '../lib/error.js';
-import { findNews, findAllNews } from '../controllers/news.controller.js';
+import { findNews, findAllNews, getLastNews } 
+    from '../controllers/news.controller.js';
 
 const router = express.Router();
 
@@ -77,6 +78,22 @@ router.put('/data/:title', JWT_SECURITY, validBody,
         return res.status(response['statusCode'])
             .json(response);
     }
+    catch(error){
+        logger.error(error);
+
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    }
+});
+
+router.get('/last', async (req, res) => {
+    try{
+        const response = await getLastNews();
+        logger.info({response: response});
+
+        return res.status(response['statusCode'])
+            .json(response);
+    } 
     catch(error){
         logger.error(error);
 

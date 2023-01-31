@@ -1,9 +1,8 @@
 import { createNewsDb, getAllNews, getNews, 
-    getNewsLength, 
-    getUserById, updateNewsDb } from "../services/news.service.js";
+    getNewsLength, getLastNewsDb, updateNewsDb } from "../services/news.service.js";
 import logger from '../lib/log.js';
-import { BadRequest, InternalError, ServerError, 
-    Unauthorized } from "../lib/error.js";
+import { BadRequest, InternalError, NotFound, 
+    ServerError, Unauthorized } from "../lib/error.js";
 
 export const createNews = async function(body){
     logger.debug({createBodyNewsController: body});
@@ -79,4 +78,17 @@ export const findNews = async function(key, value){
 
 export const updateNews = async function(title, body){
     return updateNewsDb(title, body);
+};
+
+export const getLastNews = async function(){
+    const lastNews = await getLastNewsDb();
+    logger.debug({lastNewsController: lastNews});
+
+    ServerError.throwIf(!lastNews, 
+        'Not found.', NotFound);
+
+    return {
+        statusCode: 200,
+        lastNews
+    };
 };

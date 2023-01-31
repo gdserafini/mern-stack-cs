@@ -73,3 +73,14 @@ export const getUserById = async function(id){
 export const updateNewsDb = async function(title, body){
     return;
 };
+
+export const getLastNewsDb = async function(){
+
+    return prisma.new.findMany({
+        orderBy: {
+            created: 'desc'
+        },
+        take: 1
+    });
+
+};
