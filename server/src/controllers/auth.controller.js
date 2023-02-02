@@ -4,6 +4,7 @@ import { getUser } from '../services/auth.service.js';
 import jwt from 'jsonwebtoken';
 import { BadRequest, NotFound, ServerError, Unauthorized } from '../lib/error.js';
 import logger from '../lib/log.js';
+import {newAxios} from '../lib/network.js';
 
 const generateToken = function(user){
     logger.debug({toTokenUser: user});

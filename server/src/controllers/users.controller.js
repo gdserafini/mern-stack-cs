@@ -40,8 +40,8 @@ export const createUser = async function(body){
     };
 };
 
-export const findUser = async function(id){
-    const user = await find('id', id);
+export const findUser = async function(value, field='id'){
+    const user = await find(field, value);
     logger.debug({userFind: user});
 
     ServerError.throwIf(!user, 
