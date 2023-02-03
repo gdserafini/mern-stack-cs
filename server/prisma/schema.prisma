@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -43,7 +44,7 @@ model Likes {
 
 model New {
   id         Int @id @default(autoincrement())
-  title      String @unique
+  title      String 
   text       String @db.LongText
   created    DateTime @default(now())
   comments   Comment[]
@@ -51,4 +52,7 @@ model New {
   userId     Int
   author     User @relation(fields: [userId], references: [id])
   banner     String
+
+  @@fulltext([title])
+  @@fulltext([title, text])
 }

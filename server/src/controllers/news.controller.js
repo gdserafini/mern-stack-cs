@@ -1,4 +1,4 @@
-import { createNewsDb, getAllNews, getNews, 
+import { createNewsDb, getAllNews, getNewsDb, 
     getNewsLength, getLastNewsDb, updateNewsDb } from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, NotFound, 
@@ -76,7 +76,29 @@ export const findNews = async function(key, value){
     ServerError.throwIf(!key || !value,
         'Missing data.', BadRequest);
 
-    return getNews(key, value);
+    const news = await getNewsDb(key, value);
+    logger.debug({
+        newsControllerNews: news
+    });
+
+    ServerError.throwIf(!news,
+        'Not found.', NotFound);
+
+    return {
+        statusCode: 200,
+        results: news.map(n => ({
+            title: n['title'],
+            text: n['text'],
+            created: n['created'],
+            comments: n['comments'],
+            likes: n['likes'],
+            author: {
+                username: n['author']['username'],
+                avatar: n['author']['avatar']
+            },
+            banner: n['banner']
+        }))
+    };
 };
 
 export const updateNews = async function(title, body){

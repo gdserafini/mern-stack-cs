@@ -111,13 +111,22 @@ const validTitleFormat = function(title){
 };
 
 export const validTitle = function(req, res, next){
-    const {title} = req.params.title;
-    logger.debug({titleReqMiddleware: title});
+    try{
+        const {title} = req.query;
+        logger.debug({titleReqMiddleware: title});
 
-    ServerError
-        .throwIf(!title, 'Missing title.', BadRequest)
-        .throwIf(!validTitleFormat(title), 
-            'Invalid title format.', BadRequest);
+        ServerError
+            .throwIf(!title, 'Missing title.', BadRequest)
+            .throwIf(!validTitleFormat(title), 
+                'Invalid title format.', BadRequest);
 
-    next();    
+        req.title = title.replace("-", " ");
+
+        next();   
+    }
+    catch(error){
+        logger.error(error);
+        return res.status(error['statusCode'])
+            .json(errorJson(error));
+    } 
 };

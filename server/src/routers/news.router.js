@@ -1,10 +1,9 @@
 import express from 'express';
 import { JWT_SECURITY, validBody, validTitle } 
     from '../middlewares/global.middleware.js';
-import { createNews } from '../controllers/news.controller.js';
 import logger from '../lib/log.js';
 import { errorJson } from '../lib/error.js';
-import { findNews, findAllNews, getLastNews } 
+import { createNews, findNews, findAllNews, getLastNews } 
     from '../controllers/news.controller.js';
 
 const router = express.Router();
@@ -26,9 +25,10 @@ router.post('/data', JWT_SECURITY, validBody,
     };
 });
 
-router.get('/data/:title', validTitle, async (req, res) => {
+router.get('/data', validTitle, async (req, res) => {
     try{
-        const response = await findNews(req.params.title);
+        const { title } = req;
+        const response = await findNews('title', title);
         logger.info({response: response});
 
         return res.status(response['statusCode'])
@@ -69,10 +69,10 @@ router.get('/all', async (req, res) => {
     }
 });
 
-router.put('/data/:title', JWT_SECURITY, validBody, 
+router.put('/data', JWT_SECURITY, validBody, 
     validTitle, async (req, res) => {
     try{
-        const response = await updateNews(req.params.title, req.body);
+        const response = await updateNews(req.title, req.body);
         logger.info({response: response});
 
         return res.status(response['statusCode'])

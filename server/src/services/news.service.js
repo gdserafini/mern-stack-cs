@@ -49,12 +49,14 @@ export const getAllNews = async function(limit, offset, order){
     });
 };
 
-export const getNews = async function(key, value){
+export const getNewsDb = async function(key, value){
     logger.debug({toFindNewsService: {key, value}});
 
-    return prisma.new.findUnique({
+    return prisma.new.findMany({
         where: {
-            [key]: value
+            [key]: {
+                search: value
+            }
         },
         select: NEWS_FIELDS
     });
