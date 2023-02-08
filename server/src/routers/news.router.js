@@ -129,4 +129,16 @@ router.get('/by-user', JWT_SECURITY, async (req, res) => {
     }
 });
 
+router.patch('/data', JWT_SECURITY, async (req, res) => {
+    try{
+
+    }
+    catch(error){
+        logger.error(error);
+
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    }
+});
+
 export default router;
