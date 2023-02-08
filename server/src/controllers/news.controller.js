@@ -1,5 +1,6 @@
 import { createNewsDb, getAllNews, getNewsDb, 
-    getNewsLength, getLastNewsDb, updateNewsDb } from "../services/news.service.js";
+    getNewsLength, getLastNewsDb, updateNewsDb,
+    getList} from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, NotFound, 
     ServerError, Unauthorized } from "../lib/error.js";
@@ -32,7 +33,7 @@ export const createNews = async function(body){
     };
 };
 
-export const findAllNews = async function(limit, offset, order, url){
+export const findAllNews = async function(limit, offset, order, key, value){
     logger.debug({queryAllController: {limit, offset, order}});
 
     const total = await getNewsLength();
@@ -50,7 +51,7 @@ export const findAllNews = async function(limit, offset, order, url){
         next, nextUrl, previous, previousUrl
     }});
 
-    const news = await getAllNews(limit, offset, order);
+    const news = await getAllNews(limit, offset, order, key, value);
 
     return {
         statusCode: 200,
@@ -76,7 +77,7 @@ export const findNews = async function(key, value){
     ServerError.throwIf(!key || !value,
         'Missing data.', BadRequest);
 
-    const news = await getNewsDb(key, value);
+    const news = await getList(key, value);
     logger.debug({
         newsControllerNews: news
     });

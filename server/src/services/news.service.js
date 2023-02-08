@@ -13,6 +13,17 @@ const NEWS_FIELDS = {
     banner: true
 };
 
+export const getList = async function(field, value, order){
+    return prisma.new.findMany({
+        where: {
+            [field]: value
+        },
+        orderBy: {
+            title: order ? order : 'asc'
+        }
+    });
+};
+
 export const createNewsDb = async function(body){
     logger.debug({serviceCreateNewsBody: body});
 
@@ -36,10 +47,16 @@ export const getNewsLength = async function(){
     return count;
 };
 
-export const getAllNews = async function(limit, offset, order){
-    logger.debug({queryAllService: {limit, offset, order}});
+export const getAllNews = async function(
+        limit, offset, order, key, value){
+
+    logger.debug({queryAllService: {
+        limit, offset, order, key, value}});
 
     return prisma.new.findMany({
+        where: {
+            [key]: value
+        },
         skip: offset,
         take: limit,
         orderBy: {

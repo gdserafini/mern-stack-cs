@@ -3,8 +3,8 @@ import { JWT_SECURITY, validBody, validTitle }
     from '../middlewares/global.middleware.js';
 import logger from '../lib/log.js';
 import { errorJson } from '../lib/error.js';
-import { createNews, findNews, findAllNews, getLastNews } 
-    from '../controllers/news.controller.js';
+import { createNews, findNews, findAllNews, 
+    getLastNews } from '../controllers/news.controller.js';
 
 const router = express.Router();
 
@@ -94,6 +94,33 @@ router.get('/last', async (req, res) => {
         return res.status(response['statusCode'])
             .json(response);
     } 
+    catch(error){
+        logger.error(error);
+
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    }
+});
+
+router.get('/by-user', JWT_SECURITY, async (req, res) => {
+    try{
+        const {userId} = req;
+        let {limit, offset, order} = req.query;
+        logger.debug({reqGetAllQuery: {limit, offset}});
+
+        limit = parseInt(limit);
+        offset = parseInt(offset);
+
+        if(!limit) limit = 10;
+        if(!offset) offset = 0;
+        if(!order) order = 'asc'
+
+        const response = await findAllNews(
+            limit, offset, order, 'userId', userId);
+
+        return res.status(response['statusCode'])
+            .json(response);
+    }
     catch(error){
         logger.error(error);
 
