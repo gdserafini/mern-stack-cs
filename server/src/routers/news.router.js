@@ -163,6 +163,54 @@ router.delete('/:id', validId, JWT_SECURITY,
                 .json(errorJson(error));
         }
 
-    })
+});
+
+router.post('/like/:id', JWT_SECURITY, async (req, res) => {
+    try{
+        
+    }
+    catch(error){
+        logger.error(error);
+    
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    };
+});
+
+router.delete('/like', JWT_SECURITY, async (req, res) => {
+    try{
+
+    }
+    catch(error){
+        logger.error(error);
+    
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    };
+});
+
+router.post('/comment', JWT_SECURITY, async (req, res) => {
+    try{
+
+    }
+    catch(error){
+        logger.error(error);
+    
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    };
+});
+
+router.delete('/comment', JWT_SECURITY, async (req, res) => {
+    try{
+
+    }
+    catch(error){
+        logger.error(error);
+    
+        return res.sendStatus(error['statusCode'])
+            .json(errorJson(error));
+    };
+});
 
 export default router;
