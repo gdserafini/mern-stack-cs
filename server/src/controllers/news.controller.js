@@ -102,8 +102,11 @@ export const findNews = async function(key, value){
     };
 };
 
-export const updateNews = async function(title, body){
-    return updateNewsDb(title, body);
+export const updateNews = async function(body){
+    ServerError.throwIf(!body,
+        'Missing data.', BadRequest);
+
+    return updateNewsDb(body['title'], body);
 };
 
 export const getLastNews = async function(){

@@ -90,7 +90,12 @@ export const getUserById = async function(id){
 };
 
 export const updateNewsDb = async function(title, body){
-    return;
+    return prisma.new.update({
+        where: {
+            'title': title
+        },
+        data: body
+    });
 };
 
 export const getLastNewsDb = async function(){
