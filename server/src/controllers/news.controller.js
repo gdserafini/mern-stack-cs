@@ -106,7 +106,15 @@ export const updateNews = async function(body){
     ServerError.throwIf(!body,
         'Missing data.', BadRequest);
 
-    return updateNewsDb(body['title'], body);
+    const resp = await updateNewsDb(body['title'], body);
+
+    ServerError.throwIf(!resp,
+        'Cannot update.', InternalError);
+
+    return {
+        statusCode: 200,
+        message: 'Successfuly.'
+    };
 };
 
 export const getLastNews = async function(){
@@ -133,3 +141,18 @@ export const getLastNews = async function(){
         }
     };
 };
+
+export const deleteNews = async function(id){
+    ServerError.throwIf(!id,
+        'Missing id.', BadRequest);
+
+    const resp = await deleteNewsDb(id);
+
+    ServerError.throwIf(!resp,
+        'Cannot delete.', InternalError);
+
+    return {
+        statusCode: 200,
+        message: 'Successfuly deleted.'
+    };
+}

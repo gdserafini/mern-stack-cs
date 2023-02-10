@@ -109,3 +109,11 @@ export const getLastNewsDb = async function(){
     });
 
 };
+
+export const deleteNewsDb = async function(id){
+    return prisma.new.delete({
+        where: {
+            'id': id
+        }
+    });
+}

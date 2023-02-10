@@ -1,5 +1,5 @@
 import express from 'express';
-import { JWT_SECURITY, validBody, validTitle } 
+import { JWT_SECURITY, validBody, validId, validTitle } 
     from '../middlewares/global.middleware.js';
 import logger from '../lib/log.js';
 import { errorJson } from '../lib/error.js';
@@ -144,7 +144,25 @@ router.put('/data', validBody, JWT_SECURITY,
 
         return res.sendStatus(error['statusCode'])
             .json(errorJson(error));
-    }
+    };
 });
+
+router.delete('/:id', validId, JWT_SECURITY,
+    async (req, res) => {
+
+        try{
+            const response = await deleteNews(req.params.id);
+    
+            return res.status(response['statusCode'])
+                .json(response);
+        }
+        catch(error){
+            logger.error(error);
+    
+            return res.sendStatus(error['statusCode'])
+                .json(errorJson(error));
+        }
+
+    })
 
 export default router;
