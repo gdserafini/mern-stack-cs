@@ -155,4 +155,12 @@ export const deleteNews = async function(id){
         statusCode: 200,
         message: 'Successfuly deleted.'
     };
-}
+};
+
+export const addInfo = async function(id, userId, infoName){
+
+};
+
+export const deleteInfo = async function(id, userId, infoName){
+
+};

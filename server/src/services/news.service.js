@@ -116,4 +116,12 @@ export const deleteNewsDb = async function(id){
             'id': id
         }
     });
-}
+};
+
+export const addInfoDb = async function(id, userId, infoName){
+    
+};
+
+export const deleteInfoDb = async function(id, userId, infoName){
+
+};
