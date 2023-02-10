@@ -1,6 +1,6 @@
 import { createNewsDb, getAllNews, getNewsDb, 
     getNewsLength, getLastNewsDb, updateNewsDb,
-    getList} from "../services/news.service.js";
+    getList, deleteNewsDb} from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, NotFound, 
     ServerError, Unauthorized } from "../lib/error.js";
@@ -15,7 +15,7 @@ export const createNews = async function(body){
             'Missing data', BadRequest)
         .throwIf(!userId, 'Unauthorized', Unauthorized);
 
-    const exists = await getNews('title', body['title']);
+    const exists = await getNewsDb('title', body['title']);
     logger.debug({existsNewsController: exists});
 
     ServerError.throwIf(exists, 'News already exists',
