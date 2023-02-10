@@ -167,7 +167,7 @@ router.delete('/:id', validId, JWT_SECURITY,
 
 router.post('/like/:id', JWT_SECURITY, async (req, res) => {
     try{
-        
+
     }
     catch(error){
         logger.error(error);
@@ -177,7 +177,7 @@ router.post('/like/:id', JWT_SECURITY, async (req, res) => {
     };
 });
 
-router.delete('/like', JWT_SECURITY, async (req, res) => {
+router.delete('/like/:id', JWT_SECURITY, async (req, res) => {
     try{
 
     }
@@ -189,7 +189,7 @@ router.delete('/like', JWT_SECURITY, async (req, res) => {
     };
 });
 
-router.post('/comment', JWT_SECURITY, async (req, res) => {
+router.post('/comment/:id', JWT_SECURITY, async (req, res) => {
     try{
 
     }
@@ -201,7 +201,7 @@ router.post('/comment', JWT_SECURITY, async (req, res) => {
     };
 });
 
-router.delete('/comment', JWT_SECURITY, async (req, res) => {
+router.delete('/comment/:id', JWT_SECURITY, async (req, res) => {
     try{
 
     }
