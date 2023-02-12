@@ -164,9 +164,11 @@ router.delete('/:id', validId, JWT_SECURITY,
 
 });
 
-router.post('/like/:id', async (req, res) => {
+router.post('/like/:id', validId, JWT_SECURITY, 
+    async (req, res) => {
+
     try{
-        //const {userId} = req;
+        const {userId} = req;
         const newId = parseInt(req.params.id);
 
         const response = await addInfo(newId, 13, 'likes');
@@ -182,7 +184,9 @@ router.post('/like/:id', async (req, res) => {
     };
 });
 
-router.delete('/like/:id', async (req, res) => {
+router.delete('/like/:id', validId, JWT_SECURITY, 
+    async (req, res) => {
+
     try{
         const id = parseInt(req.params.id);
 
@@ -199,7 +203,7 @@ router.delete('/like/:id', async (req, res) => {
     };
 });
 
-router.post('/comment/:id', validBody, JWT_SECURITY, 
+router.post('/comment/:id', validId, validBody, JWT_SECURITY, 
         async (req, res) => {
 
     try{
@@ -221,7 +225,9 @@ router.post('/comment/:id', validBody, JWT_SECURITY,
     };
 });
 
-router.delete('/comment:id', JWT_SECURITY, async (req, res) => {
+router.delete('/comment:id', validId, JWT_SECURITY, 
+    async (req, res) => {
+        
     try{
         const id = parseInt(req.params.id);
 
