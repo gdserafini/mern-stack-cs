@@ -164,12 +164,12 @@ router.delete('/:id', validId, JWT_SECURITY,
 
 });
 
-router.post('/like/:id', JWT_SECURITY, async (req, res) => {
+router.post('/like/:id', async (req, res) => {
     try{
-        const {userId} = req;
+        //const {userId} = req;
         const newId = parseInt(req.params.id);
 
-        const response = await addInfo(newId, userId, 'likes');
+        const response = await addInfo(newId, 13, 'likes');
     
         return res.status(response['statusCode'])
             .json(response);

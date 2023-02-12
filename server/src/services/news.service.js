@@ -119,7 +119,7 @@ export const deleteNewsDb = async function(id){
 };
 
 export const getLikeDb = async function(newId, userId){
-    return prisma.likes.findUnique({
+    return prisma.likes.findFirst({
         where: {
             newId: newId,
             userId: userId
