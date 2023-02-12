@@ -149,6 +149,7 @@ export const deleteNews = async function(id){
         'Missing id.', BadRequest);
 
     const resp = await deleteNewsDb(id);
+    logger.debug(`News controller - deleteNews - resp: ${resp}`);
 
     ServerError.throwIf(!resp,
         'Cannot delete.', InternalError);
@@ -165,13 +166,14 @@ export const addInfo = async function(newId, userId, infoName, data){
 
     if(infoName === 'likes'){
         const exists = await getLikeDb(newId, userId);
+        logger.debug(`News controller - addInfo - exists: ${exists}`);
 
         ServerError.throwIf(exists,
             'Already like it.', Unauthorized);
     };
 
     const resp = await addInfoDb(newId, userId, infoName, data);
-    logger.debug(`Add info: ${resp}`);
+    logger.debug(`News controller - addInfo - resp: ${resp}`);
 
     ServerError.throwIf(!resp,
         'Internal server error.', InternalError);
@@ -183,8 +185,11 @@ export const addInfo = async function(newId, userId, infoName, data){
 };
 
 export const deleteInfo = async function(id, userId, infoName){
+    ServerError.throwIf(!id || !userId || !infoName,
+        'Missing params.', BadRequest);
 
     const deleted = await deleteInfoDb(id, userId, infoName);
+    logger.debug(`News controller - deleteInfo - deleted: ${deleted}`);
 
     ServerError.throwIf(!deleted,
         'Internal server error.', InternalError);
