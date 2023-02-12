@@ -118,8 +118,50 @@ export const deleteNewsDb = async function(id){
     });
 };
 
-export const addInfoDb = async function(id, userId, infoName){
-    
+export const getLikeDb = async function(newId, userId){
+    return prisma.likes.findUnique({
+        where: {
+            newId: newId,
+            userId: userId
+        }
+    });
+};
+
+export const addInfoDb = async function(newId, userId, infoName, text){
+
+    if(infoName === 'likes'){
+        return prisma.new.update({
+            where: {
+                id: newId
+            },
+            data: {
+                [infoName]: {
+                    create: [
+                        {
+                            userId: userId
+                        }
+                    ]
+                }
+            }
+        });
+    }
+
+    return prisma.new.update({
+        where: {
+            id: newId
+        },
+        data: {
+            [infoName]: {
+                create: [
+                    {
+                        text: text,
+                        userId: userId
+                    }
+                ]
+            }
+        }
+    });
+
 };
 
 export const deleteInfoDb = async function(id, userId, infoName){

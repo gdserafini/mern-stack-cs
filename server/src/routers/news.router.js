@@ -4,8 +4,7 @@ import { JWT_SECURITY, validBody, validId, validTitle }
 import logger from '../lib/log.js';
 import { errorJson } from '../lib/error.js';
 import { createNews, findNews, findAllNews, 
-    getLastNews, 
-    updateNews} from '../controllers/news.controller.js';
+    getLastNews, updateNews, addInfo} from '../controllers/news.controller.js';
 
 const router = express.Router();
 
@@ -167,7 +166,13 @@ router.delete('/:id', validId, JWT_SECURITY,
 
 router.post('/like/:id', JWT_SECURITY, async (req, res) => {
     try{
+        const {userId} = req;
+        const newId = parseInt(req.params.id);
 
+        const response = await addInfo(newId, userId, 'likes');
+    
+        return res.status(response['statusCode'])
+            .json(response);
     }
     catch(error){
         logger.error(error);
@@ -189,9 +194,19 @@ router.delete('/like/:id', JWT_SECURITY, async (req, res) => {
     };
 });
 
-router.post('/comment/:id', JWT_SECURITY, async (req, res) => {
-    try{
+router.post('/comment/:id', validBody, JWT_SECURITY, 
+        async (req, res) => {
 
+    try{
+        const {userId} = req;
+        const newId = parseInt(req.params.id);
+        const {text} = req.body;
+
+        const response = await addInfo(
+            newId, userId, 'comments', text);
+    
+        return res.status(response['statusCode'])
+            .json(response);
     }
     catch(error){
         logger.error(error);

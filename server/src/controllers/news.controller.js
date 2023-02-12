@@ -1,6 +1,7 @@
 import { createNewsDb, getAllNews, getNewsDb, 
     getNewsLength, getLastNewsDb, updateNewsDb,
-    getList, deleteNewsDb} from "../services/news.service.js";
+    getList, deleteNewsDb, addInfoDb,
+    getLikeDb} from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, NotFound, 
     ServerError, Unauthorized } from "../lib/error.js";
@@ -157,10 +158,34 @@ export const deleteNews = async function(id){
     };
 };
 
-export const addInfo = async function(id, userId, infoName){
+export const addInfo = async function(newId, userId, infoName, data){
+    ServerError.throwIf(!newId || !userId || !infoName,
+        'Missing params.', BadRequest);
 
+    if(infoName === 'likes'){
+        const exists = await getLikeDb(newId, userId);
+
+        ServerError.throwIf(exists,
+            'Already like it.', Unauthorized);
+    };
+
+    const resp = await addInfoDb(newId, userId, infoName, data);
+    logger.debug(`Add info: ${resp}`);
+
+    ServerError.throwIf(!resp,
+        'Internal server error.', InternalError);
+
+    return {
+        statusCode: 200,
+        message: 'Successfuly.'
+    };
 };
 
 export const deleteInfo = async function(id, userId, infoName){
+
+    return {
+        statusCode: 200,
+        message: 'Successfuly.'
+    };
 
 };
