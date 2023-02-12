@@ -117,6 +117,7 @@ router.get('/by-user', JWT_SECURITY, async (req, res) => {
 
         const response = await findAllNews(
             limit, offset, order, 'userId', userId);
+        logger.info(`News router - GET/by-user - resp: ${response}`);
 
         return res.status(response['statusCode'])
             .json(response);
@@ -133,7 +134,10 @@ router.put('/data', validBody, JWT_SECURITY,
     async (req, res) => {
 
     try{
+        logger.debug(`News router - PUT/data - params: ${req.body}`);
+
         const response = await updateNews(req.body);
+        logger.info(`News router - PUT/data - resp: ${response}`);
 
         return res.status(response['statusCode'])
             .json(response);
@@ -150,7 +154,10 @@ router.delete('/:id', validId, JWT_SECURITY,
     async (req, res) => {
 
         try{
+            logger.debug(`News router - POST/like:id - params: ${req.params.id}`);
+
             const response = await deleteNews(req.params.id);
+            logger.info(`News router - DELETE/:id - resp: ${response}`);
     
             return res.status(response['statusCode'])
                 .json(response);
@@ -170,8 +177,10 @@ router.post('/like/:id', validId, JWT_SECURITY,
     try{
         const {userId} = req;
         const newId = parseInt(req.params.id);
+        logger.debug(`News router - POST/like:id - param: ${userId}, ${newId}`);
 
         const response = await addInfo(newId, 13, 'likes');
+        logger.info(`News router - POST/like:id - resp: ${response}`);
     
         return res.status(response['statusCode'])
             .json(response);
@@ -189,8 +198,10 @@ router.delete('/like/:id', validId, JWT_SECURITY,
 
     try{
         const id = parseInt(req.params.id);
+        logger.debug(`News router - DELETE/like:id - params: ${id}`);
 
         const response = await deleteInfo(id, 'likes');
+        logger.info(`News router - DELETE/like:id - resp: ${response}`);
 
         return res.status(response['statusCode'])
             .json(response);
@@ -210,9 +221,11 @@ router.post('/comment/:id', validId, validBody, JWT_SECURITY,
         const {userId} = req;
         const newId = parseInt(req.params.id);
         const {text} = req.body;
+        logger.debug(`News router - POST/comment:id - params: ${userId} ,${newId}, ${text}`);
 
         const response = await addInfo(
             newId, userId, 'comments', text);
+        logger.info(`News router - POST/comment:id - resp: ${response}`);
     
         return res.status(response['statusCode'])
             .json(response);
@@ -227,11 +240,13 @@ router.post('/comment/:id', validId, validBody, JWT_SECURITY,
 
 router.delete('/comment:id', validId, JWT_SECURITY, 
     async (req, res) => {
-        
+
     try{
         const id = parseInt(req.params.id);
+        logger.debug(`News router - DELET/comment:id - params: ${response}`);
 
         const response = await deleteInfo(id, 'comments');
+        logger.info(`News router - DELETE/comment:id - resp: ${response}`);
 
         return res.status(response['statusCode'])
             .json(response);
