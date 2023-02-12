@@ -1,7 +1,8 @@
 import { createNewsDb, getAllNews, getNewsDb, 
     getNewsLength, getLastNewsDb, updateNewsDb,
     getList, deleteNewsDb, addInfoDb,
-    getLikeDb} from "../services/news.service.js";
+    getLikeDb,
+    deleteInfoDb} from "../services/news.service.js";
 import logger from '../lib/log.js';
 import { BadRequest, InternalError, NotFound, 
     ServerError, Unauthorized } from "../lib/error.js";
@@ -182,6 +183,11 @@ export const addInfo = async function(newId, userId, infoName, data){
 };
 
 export const deleteInfo = async function(id, userId, infoName){
+
+    const deleted = await deleteInfoDb(id, userId, infoName);
+
+    ServerError.throwIf(!deleted,
+        'Internal server error.', InternalError);
 
     return {
         statusCode: 200,

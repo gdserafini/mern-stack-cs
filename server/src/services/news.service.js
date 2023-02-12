@@ -164,6 +164,20 @@ export const addInfoDb = async function(newId, userId, infoName, text){
 
 };
 
-export const deleteInfoDb = async function(id, userId, infoName){
+export const deleteInfoDb = async function(id, infoName){
+
+        if(infoName === 'likes'){
+            return prisma.likes.delete({
+                where: {
+                    id: id
+                }
+            });
+        };
+
+        return prisma.likes.delete({
+            where: {
+                id: id
+            }
+        });
 
 };
